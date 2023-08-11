@@ -13,7 +13,7 @@ type OrderProducer struct {
 
 func NewOrderProducer(topic string) *OrderProducer {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": "127.0.0.1:9092",
+		"bootstrap.servers": "0.0.0.0:9092",
 		"client.id":         "goapp-consumer",
 		"acks":              "all",
 	})

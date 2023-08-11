@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: go-kafka
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-kafka-config
+  namespace: go-kafka
+data:
+  server.properties: |
+    broker.id=0
+    listeners=PLAINTEXT://:9092
+    log.dirs=/var/lib/go-kafka/data
+    auto.create.topics.enable=false
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: go-kafka
+  namespace: go-kafka
+spec:
+  selector:
+    matchLabels:
+      app: go-kafka
+  serviceName: go-kafka-headless
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: go-kafka
+    spec:
+      containers:
+      - name: go-kafka
+        image: confluentinc/cp-kafka:latest
+        ports:
+        - containerPort: 9092
+        env:
+          - name: KAFKA_BROKER_ID
+            value: "1"
+          - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+            value: "true"
+          - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+            value: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+          - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+            value: "1"
+          - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+            value: "1"
+          - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+            value: "1"
+          - name: KAFKA_ZOOKEEPER_CONNECT
+            value: zookeeper:2181
+          - name: KAFKA_ADVERTISED_LISTENERS
+            value: "PLAINTEXT://go-kafka:9092,PLAINTEXT_HOST://localhost:19092"
+
+        volumeMounts:
+        - name: go-kafka-data
+          mountPath: /var/lib/go-kafka/data
+  volumeClaimTemplates:
+  - metadata:
+      name: go-kafka-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-kafka
+  namespace: go-kafka
+spec:
+  type: NodePort
+  ports:
+  - name: go-kafka
+    port: 9092
+    targetPort: 9092
+  selector:
+    app: go-kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-kafka-headless
+  namespace: go-kafka
+spec:
+  clusterIP: None
+  ports:
+  - name: go-kafka
+    port: 9092
+    targetPort: 9092
+  selector:
+    app: go-kafka
+

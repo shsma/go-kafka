@@ -24,7 +24,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("failed to produce: %v", err)
 		}
-		time.Sleep(3 * time.Second)
+		time.Sleep(time.Second * 3)
 	}
-
 }

@@ -1,0 +1,23 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: go-kafka-zookeeper
+build:
+  artifacts: []
+deploy:
+  kubectl:
+    manifests:
+      - helm/go-kafka.yaml
+      - helm/zookeeper.yaml
+
+portForward:
+  - resourceType: service
+    resourceName: go-kafka
+    namespace: go-kafka
+    port: 9092
+    localPort: 9092
+  - resourceType: service
+    resourceName: zookeeper
+    namespace: go-kafka
+    port: 2181
+    localPort: 2181
