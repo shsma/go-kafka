@@ -7,6 +7,16 @@ This Go app demonstrates Kafka messaging.
 - Go (Golang) installed: https://golang.org/dl/
 - Accessible Kafka cluster or instance.
 
+## Run Kafka Locally
+### Run with Docker Compose
+```shell
+docker-compose up 
+```
+
+### Run with Skaffold
+```shell
+skaffold run  --port-forward
+```
 ## Usage
 
 1. Clone the repo.
