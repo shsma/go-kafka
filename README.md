@@ -17,13 +17,10 @@ docker-compose up
 ```shell
 skaffold run  --port-forward
 ```
-## Usage
-
-1. Clone the repo.
-2. Navigate to the project directory.
-3. Install dependencies: `go mod download`
-4. Update Kafka connection info for `producers` and `consumers`.
-5. Run: `go run main.go`
+## Run App
+1. Install dependencies: `go mod download`
+2. Update Kafka connection info for `producers` and `consumers`.
+3. Run: `go run main.go`
 
 ## Customization
 
