@@ -1,6 +1,7 @@
 # Go Kafka App
 
-This Go app demonstrates Kafka messaging.
+This Go app demonstrates Kafka messaging usiing k8s(minikube) + skaffold
+
 
 ## Prerequisites
 
